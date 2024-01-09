@@ -10,7 +10,10 @@ import com.example.orderservice.Model.OrderLineItems;
 import com.example.orderservice.Repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +23,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class OrderServiceImp implements OrderService{
-
+    @Value("${order.service.webhook.url}")
+    private String orderServiceWebhookUrl;
+    private final WebClient webClient;
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final inventoryRepositoryI inventoryRepositoryItest;
@@ -51,5 +56,15 @@ public class OrderServiceImp implements OrderService{
            throw new IllegalArgumentException("Product is not in stock, please try again later");
        }
         return orderMapper.toDto(order);
+    }
+    public void notifyProductAdded(List<InventoryDto> inventoryDto){
+        webClient.post()
+                .uri(orderServiceWebhookUrl)
+                .bodyValue(inventoryDto)
+                .retrieve()
+                .bodyToMono(String.class)
+                .subscribe(response -> {
+                    System.out.println("Webhook response: " + response);
+                });
     }
 }

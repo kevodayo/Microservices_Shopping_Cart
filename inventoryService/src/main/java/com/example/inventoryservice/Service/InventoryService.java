@@ -8,4 +8,6 @@ import java.util.List;
 @Service
 public interface InventoryService {
     List<InventoryDto> isInStock(List<String> skuCode);
+
+    List<InventoryDto> addToStock(List<InventoryDto> inventoryDtoList);
 }

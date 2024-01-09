@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @SpringBootApplication
 @EnableFeignClients
@@ -25,6 +26,10 @@ public class OrderServiceApplication {
     @Bean
     public OrderLineItemsMapper orderLineItemsMapper(ModelMapper modelMapper){
        return new OrderLineItemsMapper(modelMapper);
+    }
+    @Bean
+    WebClient webClient(WebClient.Builder builder) {
+        return builder.build();
     }
     public static void main(String[] args) {
         SpringApplication.run(OrderServiceApplication.class, args);
