@@ -33,7 +33,7 @@ public class InventoryServiceApplication {
     @Bean
     public CommandLineRunner loadData(KafkaTemplate<String, String>  kafkaTemplate){
         return args -> {
-            kafkaTemplate.send("inventory", "Hello Kevine");
+            kafkaTemplate.send("inventory", "Hello Kevine Test it");
         };
     }
 }
